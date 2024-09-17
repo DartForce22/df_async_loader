@@ -3,6 +3,14 @@ description: "A new Flutter project."
 
 version: 1.0.0+1
 
+homepage: https://dartforce.dev/
+repository: https://github.com/DartForce22/df_async_loader
+license: MIT
+
+platforms:
+  android:
+  ios:
+
 environment:
   sdk: '>=3.2.2 <4.0.0'
 
