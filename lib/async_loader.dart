@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 /// A utility class for showing a loading dialog while performing asynchronous tasks.
 
-class LoadingDialog {
+class AsyncLoader {
   /// Displays a loading dialog while executing the provided asynchronous [callback].
   ///
   /// The [callback] function is a `Future` that runs in the background while the loading dialog is displayed.
@@ -19,7 +19,7 @@ class LoadingDialog {
   /// - [customBody]: Custom widget that can replace the default loading dialog content.
   /// - [loadingIndicator]: Optional widget for a loading indicator. Defaults to `CircularProgressIndicator`.
   /// - [textStyle]: Optional text style for the message inside the dialog.
-  static callMethodWithLoadingDialog<T>({
+  static showLoader<T>({
     required BuildContext context,
     required Future<T> Function() callback,
     Function(T)? onFinished,
