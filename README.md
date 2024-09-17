@@ -8,7 +8,7 @@
 
 ## Example
 ```dart
- AsyncLoader.showLoader<String>(
+ DfAsyncLoader.showLoader<String>(
   context: context,
   callback: () async {
     // Simulating a delay and returning a string result.
@@ -25,7 +25,7 @@
 ```
 ## Example with custom loading widget
 ```dart
- AsyncLoader.showLoader<EgObject>(
+ DfAsyncLoader.showLoader<EgObject>(
       context: context,
       customBody: const SizedBox(
         height: 12,
@@ -58,6 +58,6 @@ Add `df_async_loader` to your `pubspec.yaml`:
 Then, run: `flutter pub get`
 
 ## Usage
-- Call the `AsyncLoader.showLoader<T>()` method, passing your `context`, the async `callback`, and the `onFinished` function to handle the result once the task completes.
+- Call the `DfAsyncLoader.showLoader<T>()` method, passing your `context`, the async `callback`, and the `onFinished` function to handle the result once the task completes.
 
 

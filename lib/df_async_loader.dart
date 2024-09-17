@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 /// A utility class for showing a loading dialog while performing asynchronous tasks.
 
-class AsyncLoader {
+class DfAsyncLoader {
   /// Displays a loading dialog while executing the provided asynchronous [callback].
   ///
   /// The [callback] function is a `Future` that runs in the background while the loading dialog is displayed.

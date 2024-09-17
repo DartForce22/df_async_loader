@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '/eg_object.dart';
-import 'package:df_async_loader/async_loader.dart';
+import 'package:df_async_loader/df_async_loader.dart';
 
 void main() {
   runApp(const MyApp());
@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
   ///
   /// Once the operation finishes, a snack bar with a message is displayed.
   void _waitForVoidFunction(BuildContext context) {
-    AsyncLoader.showLoader<void>(
+    DfAsyncLoader.showLoader<void>(
       context: context,
       callback: () async {
         // Simulating a delay to mimic an asynchronous task.
@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
   ///
   /// Once the operation finishes, a snack bar with the result is displayed.
   void _waitForIntFunction(BuildContext context) {
-    AsyncLoader.showLoader<int>(
+    DfAsyncLoader.showLoader<int>(
       context: context,
       callback: () async {
         // Simulating a delay and returning an integer result.
@@ -53,7 +53,7 @@ class MyApp extends StatelessWidget {
   ///
   /// Once the operation finishes, a snack bar with the result is displayed.
   void _waitForStringFunction(BuildContext context) {
-    AsyncLoader.showLoader<String>(
+    DfAsyncLoader.showLoader<String>(
       context: context,
       callback: () async {
         // Simulating a delay and returning a string result.
@@ -73,7 +73,7 @@ class MyApp extends StatelessWidget {
   ///
   /// Once the operation finishes, a snack bar with the object's values is displayed.
   void _waitForObjectFunction(BuildContext context) {
-    AsyncLoader.showLoader<EgObject>(
+    DfAsyncLoader.showLoader<EgObject>(
       context: context,
       customBody: const SizedBox(
         height: 12,
