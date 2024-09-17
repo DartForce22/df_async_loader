@@ -23,6 +23,32 @@
   },
 );
 ```
+## Example with custom loading widget
+```dart
+ AsyncLoader.showLoader<EgObject>(
+      context: context,
+      customBody: const SizedBox(
+        height: 12,
+        child: LinearProgressIndicator(),
+      ),
+      callback: () async {
+        // Simulating a delay and returning a custom object.
+        await Future.delayed(const Duration(seconds: 2));
+        return const EgObject(
+          value1: "Value 1",
+          value2: false,
+        );
+      },
+      onFinished: (res) {
+        // Show a message with the object's values when the task completes.
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+              content: Text(
+                  "CALLED OBJECT FUNCTION values = ${res.value1} & ${res.value2}")),
+        );
+      },
+    );
+```
 
 # Installation
 Add `df_async_loader` to your `pubspec.yaml`:
