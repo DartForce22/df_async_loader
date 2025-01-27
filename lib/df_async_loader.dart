@@ -1,8 +1,11 @@
+import 'package:df_async_loader/df_settings.dart';
 import 'package:flutter/material.dart';
 
 /// A utility class for showing a loading dialog while performing asynchronous tasks.
 
 class DfAsyncLoader {
+  static final _settings = DfSettings.getInstance();
+
   /// Displays a loading dialog while executing the provided asynchronous [callback].
   ///
   /// The [callback] function is a `Future` that runs in the background while the loading dialog is displayed.
@@ -23,7 +26,7 @@ class DfAsyncLoader {
     required BuildContext context,
     required Future<T> Function() callback,
     Function(T)? onFinished,
-    String message = "Loading",
+    String? message,
     BoxDecoration? decoration,
     double? containerHeight,
     double? containerWidth,
@@ -31,6 +34,58 @@ class DfAsyncLoader {
     Widget? loadingIndicator,
     TextStyle? textStyle,
   }) async {
+    BoxDecoration getContainerDecoration() {
+      if (decoration != null) return decoration;
+
+      if (_settings.decoration != null) return _settings.decoration!;
+
+      return const BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.all(
+          Radius.circular(16),
+        ),
+      );
+    }
+
+    Widget? getCustomBody() {
+      return customBody ?? _settings.customBody;
+    }
+
+    TextStyle getTextStyle() {
+      if (textStyle != null) return textStyle;
+
+      if (_settings.textStyle != null) return _settings.textStyle!;
+
+      return const TextStyle(
+        fontSize: 25,
+        color: Colors.black,
+      );
+    }
+
+    Widget getLoadingIndicator() {
+      if (loadingIndicator != null) return loadingIndicator;
+
+      if (_settings.loadingIndicator != null) {
+        return _settings.loadingIndicator!;
+      }
+
+      return const CircularProgressIndicator();
+    }
+
+    double getContainerHeight() {
+      if (containerHeight != null) return containerHeight;
+      if (_settings.containerHeight != null) return _settings.containerHeight!;
+
+      return 140;
+    }
+
+    double getContainerWidth() {
+      if (containerWidth != null) return containerWidth;
+      if (_settings.containerWidth != null) return _settings.containerWidth!;
+
+      return 200;
+    }
+
     var myDialogRoute = DialogRoute(
       useSafeArea: false,
       context: context,
@@ -40,35 +95,26 @@ class DfAsyncLoader {
             backgroundColor: Colors.transparent,
             child: PopScope(
               canPop: false,
-              child: customBody ??
+              child: getCustomBody() ??
                   Center(
                     child: Material(
                       color: Colors.transparent,
                       child: Container(
-                        height: containerHeight ?? 140,
-                        width: containerWidth ?? 200,
+                        height: getContainerHeight(),
+                        width: getContainerWidth(),
                         padding: const EdgeInsets.all(16),
-                        decoration: decoration ??
-                            const BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(16),
-                              ),
-                            ),
+                        decoration: getContainerDecoration(),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text(
-                              message,
-                              style: textStyle ??
-                                  const TextStyle(
-                                    fontSize: 25,
-                                    color: Colors.black,
-                                  ),
-                            ),
-                            const SizedBox(height: 16),
-                            loadingIndicator ??
-                                const CircularProgressIndicator()
+                            if (message != null) ...[
+                              Text(
+                                message,
+                                style: getTextStyle(),
+                              ),
+                              const SizedBox(height: 16),
+                            ],
+                            getLoadingIndicator(),
                           ],
                         ),
                       ),
