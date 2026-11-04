@@ -22,9 +22,9 @@ class MyApp extends StatelessWidget {
       },
       onFinished: (_) {
         // Show a message when the task completes.
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("CALLED VOID FUNCTION")),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text("CALLED VOID FUNCTION")));
       },
     );
   }
@@ -75,24 +75,20 @@ class MyApp extends StatelessWidget {
   void _waitForObjectFunction(BuildContext context) {
     DfAsyncLoader.showLoader<EgObject>(
       context: context,
-      customBody: const SizedBox(
-        height: 12,
-        child: LinearProgressIndicator(),
-      ),
+      customBody: const SizedBox(height: 12, child: LinearProgressIndicator()),
       callback: () async {
         // Simulating a delay and returning a custom object.
         await Future.delayed(const Duration(seconds: 2));
-        return const EgObject(
-          value1: "Value 1",
-          value2: false,
-        );
+        return const EgObject(value1: "Value 1", value2: false);
       },
       onFinished: (res) {
         // Show a message with the object's values when the task completes.
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-              content: Text(
-                  "CALLED OBJECT FUNCTION values = ${res.value1} & ${res.value2}")),
+            content: Text(
+              "CALLED OBJECT FUNCTION values = ${res.value1} & ${res.value2}",
+            ),
+          ),
         );
       },
     );
@@ -106,8 +102,8 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: MaterialApp(
-        builder: (ctx, __) => Scaffold(
+      home: Builder(
+        builder: (ctx) => Scaffold(
           body: SizedBox(
             width: double.infinity,
             child: Column(
@@ -120,27 +116,21 @@ class MyApp extends StatelessWidget {
                   },
                   child: const Text("Call Void Function"),
                 ),
-                const SizedBox(
-                  height: 8,
-                ),
+                const SizedBox(height: 8),
                 ElevatedButton(
                   onPressed: () {
                     _waitForIntFunction(ctx);
                   },
                   child: const Text("Call Int Function"),
                 ),
-                const SizedBox(
-                  height: 8,
-                ),
+                const SizedBox(height: 8),
                 ElevatedButton(
                   onPressed: () {
                     _waitForStringFunction(ctx);
                   },
                   child: const Text("Call String Function"),
                 ),
-                const SizedBox(
-                  height: 8,
-                ),
+                const SizedBox(height: 8),
                 ElevatedButton(
                   onPressed: () {
                     _waitForObjectFunction(ctx);
