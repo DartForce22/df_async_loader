@@ -11,6 +11,8 @@ class DfAsyncLoader {
   /// The [callback] function is a `Future` that runs in the background while the loading dialog is displayed.
   /// Once the [callback] completes, the loading dialog is removed, and optionally the [onFinished] callback is invoked
   /// with the result of the [callback].
+  /// The returned future completes after cleanup and [onFinished]. Callback
+  /// errors dismiss the dialog and propagate through the returned future.
   ///
   /// - [context]: The `BuildContext` used to display the dialog.
   /// - [callback]: A `Future` function that runs while the loading dialog is shown.
@@ -22,7 +24,7 @@ class DfAsyncLoader {
   /// - [customBody]: Custom widget that can replace the default loading dialog content.
   /// - [loadingIndicator]: Optional widget for a loading indicator. Defaults to `CircularProgressIndicator`.
   /// - [textStyle]: Optional text style for the message inside the dialog.
-  static showLoader<T>({
+  static Future<void> showLoader<T>({
     required BuildContext context,
     required Future<T> Function() callback,
     Function(T)? onFinished,
@@ -41,9 +43,7 @@ class DfAsyncLoader {
 
       return const BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.all(
-          Radius.circular(16),
-        ),
+        borderRadius: BorderRadius.all(Radius.circular(16)),
       );
     }
 
@@ -56,10 +56,7 @@ class DfAsyncLoader {
 
       if (_settings.textStyle != null) return _settings.textStyle!;
 
-      return const TextStyle(
-        fontSize: 25,
-        color: Colors.black,
-      );
+      return const TextStyle(fontSize: 25, color: Colors.black);
     }
 
     Widget getLoadingIndicator() {
@@ -91,44 +88,47 @@ class DfAsyncLoader {
       context: context,
       builder: (BuildContext context) {
         return Dialog(
-            insetPadding: EdgeInsets.zero,
-            backgroundColor: Colors.transparent,
-            child: PopScope(
-              canPop: false,
-              child: getCustomBody() ??
-                  Center(
-                    child: Material(
-                      color: Colors.transparent,
-                      child: Container(
-                        height: getContainerHeight(),
-                        width: getContainerWidth(),
-                        padding: const EdgeInsets.all(16),
-                        decoration: getContainerDecoration(),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            if (message != null) ...[
-                              Text(
-                                message,
-                                style: getTextStyle(),
-                              ),
-                              const SizedBox(height: 16),
-                            ],
-                            getLoadingIndicator(),
+          insetPadding: EdgeInsets.zero,
+          backgroundColor: Colors.transparent,
+          child: PopScope(
+            canPop: false,
+            child:
+                getCustomBody() ??
+                Center(
+                  child: Material(
+                    color: Colors.transparent,
+                    child: Container(
+                      height: getContainerHeight(),
+                      width: getContainerWidth(),
+                      padding: const EdgeInsets.all(16),
+                      decoration: getContainerDecoration(),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          if (message != null) ...[
+                            Text(message, style: getTextStyle()),
+                            const SizedBox(height: 16),
                           ],
-                        ),
+                          getLoadingIndicator(),
+                        ],
                       ),
                     ),
                   ),
-            ));
+                ),
+          ),
+        );
       },
     );
-    Navigator.of(context).push(myDialogRoute);
+    final navigator = Navigator.of(context);
+    navigator.push(myDialogRoute);
 
-    var res = await callback();
-
-    if (myDialogRoute.isActive && context.mounted) {
-      Navigator.of(context).removeRoute(myDialogRoute);
+    late T res;
+    try {
+      res = await callback();
+    } finally {
+      if (myDialogRoute.isActive) {
+        myDialogRoute.navigator?.removeRoute(myDialogRoute);
+      }
     }
 
     if (onFinished != null) {
